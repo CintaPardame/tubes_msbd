@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $profile->name ?? 'Circle Concordia Coffee' }} ({{ $profile->short_name ?? 'C3' }}) - Specialty Coffee Beans</title>
 
-    <!-- Google Fonts: Fraunces (Editorial Heading) & DM Sans (Modern Clean Body) -->
+    <!-- Google Fonts: Fraunces & DM Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet">
@@ -61,7 +61,6 @@
             background-color: #F6F1E7;
             color: #2B2118;
         }
-        /* Arch / Kubah styling khas heritage roastery */
         .arch-frame {
             border-top-left-radius: 180px;
             border-top-right-radius: 180px;
@@ -70,13 +69,21 @@
 </head>
 <body class="font-sans antialiased selection:bg-forest selection:text-cream">
 
+    <!-- Flash Notifications (jika ada) -->
+    @if(session('success'))
+        <div class="bg-emerald-700 text-white text-xs py-2.5 px-4 text-center font-medium shadow-sm flex items-center justify-center gap-2">
+            <span>✓</span>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
     <!-- 1. TOP ANNOUNCEMENT BAR -->
     <div class="bg-forest text-cream text-[12px] py-2 px-4 text-center font-medium border-b border-forest-light tracking-wide flex items-center justify-center gap-2">
         <span class="w-2 h-2 rounded-full bg-amberCustom animate-pulse"></span>
-        <span>Biji Kopi Specialty Nusantara Terkurasi Langsung dari Petani Lokal • Batch Roasting Mingguan</span>
+        <span>Pemesanan Biji Kopi Specialty Per Paket (1 Paket = 1 kg / 1.000 gram) • Wajib Login Sebagai Konsumen</span>
     </div>
 
-    <!-- 2. NAVBAR (Warm Editorial Style) -->
+    <!-- 2. NAVBAR (Tombol Login di Pojok Kanan Atas) -->
     <header class="sticky top-0 z-50 bg-[#F6F1E7]/95 backdrop-blur-md border-b border-sand-DEFAULT/80 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <!-- Brand Identity -->
@@ -95,22 +102,47 @@
             </a>
 
             <!-- Navigation Links -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-espresso-muted">
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-espresso-muted">
                 <a href="#beranda" class="hover:text-forest transition-colors">Beranda</a>
                 <a href="#origins" class="hover:text-forest transition-colors">Asal Biji Kopi</a>
-                <a href="#populer" class="hover:text-forest transition-colors">Kopi Populer</a>
+                <a href="#populer" class="hover:text-forest transition-colors">Kopi Populer (1 kg)</a>
                 <a href="#visi-misi" class="hover:text-forest transition-colors">Visi & Misi</a>
                 <a href="#proses" class="hover:text-forest transition-colors">Proses Kurasi</a>
             </nav>
 
-            <!-- CTA Button -->
-            <div>
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890') }}?text=Halo%20C3,%20saya%20ingin%20tanya%20katalog%20biji%20kopi%20Circle%20Concordia" 
-                   target="_blank"
-                   class="inline-flex items-center gap-2 bg-forest hover:bg-forest-light text-cream font-medium text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-sm hover:shadow transition-all">
-                    <span>Minta Penawaran</span>
-                    <svg class="w-3.5 h-3.5 text-amberCustom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </a>
+            <!-- POJOK KANAN ATAS: TOMBOL LOGIN & USER AUTH -->
+            <div class="flex items-center gap-3">
+                @auth
+                    <!-- Jika Sudah Login: Tampilkan Profil Singkat & Link Dashboard -->
+                    <div class="flex items-center gap-2.5 bg-white py-1.5 px-3 rounded-full border border-sand shadow-sm">
+                        <div class="w-7 h-7 rounded-full bg-forest text-amberCustom flex items-center justify-center text-xs font-bold font-serif">
+                            {{ substr(auth()->user()->name, 0, 1) }}
+                        </div>
+                        <div class="hidden sm:block text-left text-xs leading-tight">
+                            <span class="font-bold text-forest block truncate max-w-[130px]">{{ auth()->user()->name }}</span>
+                            <span class="text-[10px] text-amberCustom-dark font-medium">{{ auth()->user()->role }} (Lvl {{ auth()->user()->level }})</span>
+                        </div>
+                        <a href="{{ route('dashboard') }}" class="ml-1 px-3 py-1 bg-forest hover:bg-forest-light text-cream rounded-full text-xs font-medium transition-colors">
+                            Dashboard
+                        </a>
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="text-stone-400 hover:text-rose-600 p-1 text-xs" title="Keluar">
+                                ✕
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <!-- Jika Belum Login: Tampilkan Tombol Login & Register di Pojok Kanan Atas -->
+                    <a href="{{ route('register') }}" class="hidden sm:inline-block text-xs font-semibold text-forest hover:text-amberCustom-dark px-3 py-2">
+                        Daftar Akun
+                    </a>
+                    <a href="{{ route('login') }}" 
+                       class="inline-flex items-center gap-2 bg-forest hover:bg-forest-light text-cream font-medium text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all hover:scale-105">
+                        <svg class="w-3.5 h-3.5 text-amberCustom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                        <span>Masuk (Login)</span>
+                    </a>
+                @endauth
             </div>
         </div>
     </header>
@@ -125,7 +157,7 @@
                     <!-- Kicker / Tag -->
                     <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sand-DEFAULT/60 border border-sand-DEFAULT text-amberCustom-dark text-xs font-semibold tracking-wider uppercase mb-6">
                         <span>🌱</span>
-                        <span>Single Origin & Specialty Blend Nusantara</span>
+                        <span>Single Origin & Specialty Blend Nusantara • Paket 1 kg</span>
                     </div>
 
                     <!-- Main Headline -->
@@ -140,10 +172,10 @@
 
                     <!-- Buttons -->
                     <div class="flex flex-wrap items-center gap-4">
-                        <a href="#populer" 
+                        <a href="{{ route('orders.create') }}" 
                            class="px-7 py-3.5 rounded-full bg-forest hover:bg-forest-light text-cream font-medium text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2">
-                            <span>Jelajahi Kopi Populer</span>
-                            <span class="text-amberCustom">↓</span>
+                            <span>Pesan Paket Kopi (1 kg)</span>
+                            <span class="text-amberCustom">→</span>
                         </a>
                         <a href="#origins" 
                            class="px-7 py-3.5 rounded-full bg-transparent border-2 border-forest/30 hover:border-forest text-forest font-medium text-sm transition-all">
@@ -151,16 +183,20 @@
                         </a>
                     </div>
 
-                    <!-- Small Brand Motto -->
-                    <div class="mt-10 pt-6 border-t border-sand-DEFAULT flex items-center gap-3 text-xs text-amberCustom-dark font-medium italic font-serif">
-                        <span class="text-forest not-italic font-sans font-bold">C3 Motto:</span>
-                        "{{ $profile->tagline }}"
+                    <!-- Notice Wajib Login untuk Konsumen -->
+                    <div class="mt-8 p-3.5 rounded-2xl bg-white/70 border border-sand max-w-lg flex items-center gap-3 text-xs text-espresso-muted">
+                        <span class="w-8 h-8 rounded-full bg-amberCustom/20 text-amberCustom-dark flex items-center justify-center font-bold text-sm flex-shrink-0">
+                            🔒
+                        </span>
+                        <div>
+                            <strong class="text-forest block">Aturan Pemesanan Konsumen:</strong>
+                            Untuk melakukan pemesanan, silakan <a href="{{ route('login') }}" class="font-bold text-amber-800 underline">login terlebih dahulu</a> sebagai akun Konsumen.
+                        </div>
                     </div>
                 </div>
 
                 <!-- Right Column: Arch Framed Visual Image + Floating Badge -->
                 <div class="lg:col-span-5 flex justify-center lg:justify-end relative">
-                    <!-- Decorative back shadow glow -->
                     <div class="absolute -top-6 -right-6 w-72 h-72 rounded-full bg-amberCustom/15 blur-3xl pointer-events-none"></div>
 
                     <div class="relative w-full max-w-[360px] sm:max-w-[400px]">
@@ -170,23 +206,22 @@
                                  alt="Specialty Coffee Roasting Beans" 
                                  class="w-full h-full object-cover object-center scale-105 hover:scale-110 transition-transform duration-700 brightness-95">
                             
-                            <!-- Vignette / Tint -->
                             <div class="absolute inset-0 bg-gradient-to-t from-forest-dark/80 via-transparent to-transparent"></div>
                             
                             <div class="absolute bottom-6 left-6 right-6 text-cream text-center">
-                                <span class="font-serif italic text-sm text-amberCustom">Circle Concordia Coffee</span>
-                                <p class="text-xs text-cream/80 font-sans mt-0.5">Biji Kopi Pilihan Terbaik Nusantara</p>
+                                <span class="font-serif italic text-sm text-amberCustom">Circle Concordia Coffee (C3)</span>
+                                <p class="text-xs text-cream/80 font-sans mt-0.5">Penjualan Biji Kopi Per Paket (1 kg)</p>
                             </div>
                         </div>
 
-                        <!-- Floating Badge (seperti di referensi) -->
+                        <!-- Floating Badge -->
                         <div class="absolute -bottom-5 -left-4 sm:-left-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-sand-DEFAULT max-w-[220px]">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="w-2 h-2 rounded-full bg-amberCustom"></span>
-                                <span class="text-[11px] font-bold text-forest uppercase tracking-wider">Cupping Score</span>
+                                <span class="text-[11px] font-bold text-forest uppercase tracking-wider">Standar Kemasan</span>
                             </div>
                             <p class="text-xs text-espresso-muted leading-snug">
-                                Rata-rata specialty grade <strong class="text-forest">84+ poin</strong> dengan profil rasa terverifikasi.
+                                Kemasan minimum <strong class="text-forest">1 Paket = 1 kg (1.000g)</strong> dengan *one-way valve* kedap udara.
                             </p>
                         </div>
                     </div>
@@ -196,56 +231,55 @@
         </div>
     </section>
 
-    <!-- 4. FOREST GREEN VALUE STRIP (Band Banner seperti di referensi) -->
+    <!-- 4. FOREST GREEN VALUE STRIP -->
     <section class="bg-forest text-cream py-10 border-y border-forest-light">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
                 <!-- Col 1 -->
                 <div class="border-b md:border-b-0 md:border-r border-forest-light pb-6 md:pb-0 md:pr-8">
-                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">Asal Tertelusur</span>
+                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">Asal Kebun Tertelusur</span>
                     <p class="text-xs text-cream/75 leading-relaxed">
-                        Setiap varian biji kopi dilengkapi informasi petani, varietas, ketinggian kebun, dan proses pascapanen yang transparan.
+                        Data petani produsen, varietas, dan elevasi kebun terdata lengkap dalam sistem database MSBD.
                     </p>
                 </div>
 
                 <!-- Col 2 -->
                 <div class="border-b md:border-b-0 md:border-r border-forest-light pb-6 md:pb-0 md:px-8">
-                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">Mutu & Roasting Konsisten</span>
+                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">Kemasan Paket 1 kg (1.000g)</span>
                     <p class="text-xs text-cream/75 leading-relaxed">
-                        Disangrai dengan kurva profil presisi agar notes rasa manis buah, cokelat, dan aroma floral tetap harmonis di tiap seduhan.
+                        Dijual dalam satuan paket 1 kg utuh untuk memastikan mutu, aroma, dan harga terbaik langsung dari roastery.
                     </p>
                 </div>
 
                 <!-- Col 3 -->
                 <div class="md:pl-8">
-                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">Pengiriman Segar Terjadwal</span>
+                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">4 Role & 3 Level Otoritas</span>
                     <p class="text-xs text-cream/75 leading-relaxed">
-                        Dipasok dalam kondisi segar (*fresh roast*) untuk kebutuhan cafe, penikmat seduh manual, maupun konsumsi harian Anda.
+                        Sistem login terintegrasi untuk Admin (Lvl 1), Kasir & Petani (Lvl 2), serta Konsumen (Lvl 3).
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 5. SUMBER BIJI KOPI (ASAL KOPI PILIHAN) -->
+    <!-- 5. SUMBER BIJI KOPI (ORIGINS / DAERAH ASAL) -->
     <section id="origins" class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-12">
-                <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Katalog Daerah</span>
+                <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Katalog Perkebunan</span>
                 <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest mt-1.5">
-                    Asal Kopi Pilihan
+                    Asal Biji Kopi Nusantara
                 </h2>
                 <p class="text-sm text-espresso-muted mt-2 max-w-2xl">
                     Jelajahi sentra perkebunan kopi nusantara dengan karakter tanah vulkanik, iklim mikro, dan profil rasa yang berbeda-beda.
                 </p>
             </div>
 
-            <!-- Origins Grid: Card Bersih dengan Detail Terstruktur -->
+            <!-- Origins Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($origins as $origin)
                     <div class="bg-white rounded-2xl p-6 border border-sand-DEFAULT/90 shadow-sm hover:shadow-md hover:border-amberCustom/60 transition-all flex flex-col justify-between group">
                         <div>
-                            <!-- Header Region & Badge -->
                             <div class="flex items-center justify-between mb-3">
                                 <span class="text-[11px] font-bold tracking-wider uppercase text-amberCustom-dark">
                                     {{ $origin->province }}
@@ -255,18 +289,15 @@
                                 </span>
                             </div>
 
-                            <!-- Origin Name -->
                             <h3 class="font-serif font-bold text-2xl text-forest group-hover:text-amberCustom-dark transition-colors">
                                 {{ $origin->name }}
                             </h3>
 
-                            <!-- Description -->
                             <p class="text-xs text-espresso-muted mt-2.5 leading-relaxed">
                                 {{ $origin->description }}
                             </p>
                         </div>
 
-                        <!-- Card Footer -->
                         <div class="mt-6 pt-4 border-t border-sand-DEFAULT/60 flex items-center justify-between text-xs">
                             <span class="text-forest font-medium">
                                 {{ $origin->products_count }} Varian Tersedia
@@ -282,21 +313,21 @@
         </div>
     </section>
 
-    <!-- 6. BIJI KOPI POPULER (FEATURED / BEST SELLER PRODUCTS) -->
+    <!-- 6. BIJI KOPI POPULER (HARGA MINIMUM PER PAKET 1 KG) -->
     <section id="populer" class="py-20 bg-sand-light/50 border-y border-sand-DEFAULT">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
-                    <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Favorit Pelanggan</span>
+                    <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Harga Minimum Per Paket (1 kg)</span>
                     <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest mt-1.5">
                         Koleksi Biji Kopi Populer
                     </h2>
                     <p class="text-sm text-espresso-muted mt-2 max-w-xl">
-                        Varian biji kopi yang paling banyak dipesan dengan keseimbangan aroma, keasaman manis, dan krema yang melimpah.
+                        Varian biji kopi yang paling banyak dipesan. Harga di bawah adalah <strong>harga minimum per 1 paket (berat bersih 1 kg)</strong>.
                     </p>
                 </div>
-                <div class="mt-4 md:mt-0 text-xs font-medium text-espresso-muted bg-white px-4 py-2 rounded-full border border-sand-DEFAULT">
-                    Kemasan Netto: <strong class="text-forest">250 gram</strong> (Biji / Giling)
+                <div class="mt-4 md:mt-0 text-xs font-semibold text-forest bg-amberCustom/20 border border-amberCustom/40 px-4 py-2 rounded-full">
+                    📦 Minimal Pemesanan: 1 Paket (1.000 gram)
                 </div>
             </div>
 
@@ -311,7 +342,7 @@
                                  alt="{{ $product->name }}" 
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             
-                            <!-- Origin Tag Pill -->
+                            <!-- Badges -->
                             <div class="absolute top-3 left-3 flex gap-1.5">
                                 <span class="px-3 py-1 rounded-full bg-forest text-cream text-[11px] font-semibold tracking-wide shadow">
                                     {{ $product->category->name }}
@@ -321,7 +352,6 @@
                                 </span>
                             </div>
 
-                            <!-- Roast Level Tag -->
                             <div class="absolute bottom-3 right-3">
                                 <span class="px-2.5 py-1 rounded-md bg-forest-dark/90 backdrop-blur-sm text-amberCustom text-[11px] font-medium">
                                     {{ $product->roast_level }} Roast
@@ -357,19 +387,19 @@
                                 </div>
                             </div>
 
-                            <!-- Bottom Price & Order CTA -->
+                            <!-- Bottom Price & Order CTA (Mengarahkan ke Order dengan Syarat Login) -->
                             <div class="mt-6 pt-4 border-t border-sand-DEFAULT/80 flex items-center justify-between">
                                 <div>
-                                    <span class="text-[10px] text-espresso-light block">Harga per pack</span>
+                                    <span class="text-[10px] text-espresso-light block font-medium">Harga Min. Per Paket</span>
                                     <span class="font-serif font-bold text-xl text-forest">
                                         Rp {{ number_format($product->price, 0, ',', '.') }}
                                     </span>
+                                    <span class="text-[10px] text-amber-800 font-bold block">/ 1 Paket (1 kg)</span>
                                 </div>
 
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890') }}?text=Halo%20C3,%20saya%20tertarik%20memesan%20biji%20kopi%20{{ urlencode($product->name) }}" 
-                                   target="_blank"
-                                   class="px-4 py-2 rounded-full bg-forest hover:bg-forest-light text-cream font-medium text-xs flex items-center gap-1.5 shadow-sm transition-all hover:scale-105">
-                                    <span>Pesan Kopi</span>
+                                <a href="{{ route('orders.create', ['product_id' => $product->id]) }}" 
+                                   class="px-5 py-2.5 rounded-full bg-forest hover:bg-forest-light text-cream font-medium text-xs flex items-center gap-1.5 shadow-sm transition-all hover:scale-105">
+                                    <span>Pesan Paket (1 kg)</span>
                                     <svg class="w-3.5 h-3.5 text-amberCustom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                 </a>
                             </div>
@@ -381,7 +411,7 @@
         </div>
     </section>
 
-    <!-- 7. VISI & MISI (Filosofi Circle Concordia Coffee) -->
+    <!-- 7. VISI & MISI -->
     <section id="visi-misi" class="py-20 bg-sand">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="max-w-3xl mb-14">
@@ -390,12 +420,12 @@
                     Visi & Misi Usaha C3
                 </h2>
                 <p class="text-sm text-espresso-muted mt-2">
-                    Mengapa kami menamakan diri <strong>Circle Concordia Coffee</strong>: lingkaran harmoni yang menghubungkan petani, roastery, dan pecinta kopi.
+                    Mengapa kami menamakan diri <strong>Circle Concordia Coffee</strong>: lingkaran harmoni yang menghubungkan petani, roastery, dan konsumen.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                <!-- Visi Card (Forest Style) -->
+                <!-- Visi Card -->
                 <div class="lg:col-span-5 bg-forest text-cream p-8 sm:p-10 rounded-3xl shadow-lg flex flex-col justify-between">
                     <div>
                         <div class="w-12 h-12 rounded-full bg-forest-light border border-amberCustom/30 flex items-center justify-center text-amberCustom text-xl font-serif mb-6">
@@ -410,11 +440,11 @@
                         </blockquote>
                     </div>
                     <div class="mt-8 pt-6 border-t border-forest-light text-xs text-cream/70">
-                        Fokus pada perdagangan langsung (*direct trade*) yang adil dan apresiasi kualitas hasil bumi Indonesia.
+                        Kemitraan direct trade berkelanjutan dan apresiasi kopi specialty nusantara.
                     </div>
                 </div>
 
-                <!-- Misi Card (Clean White Style) -->
+                <!-- Misi Card -->
                 <div class="lg:col-span-7 bg-white p-8 sm:p-10 rounded-3xl border border-sand-DEFAULT/90 shadow-sm flex flex-col justify-between">
                     <div>
                         <span class="text-xs uppercase tracking-widest text-amberCustom-dark font-bold">Misi & Landasan Kerja</span>
@@ -440,160 +470,97 @@
 
                     <div class="mt-6 text-xs text-espresso-light flex items-center gap-2">
                         <span class="text-amberCustom-dark font-bold">✓</span>
-                        <span>Mendukung pertanian kopi yang berkelanjutan dan regeneratif.</span>
+                        <span>Mendukung kesejahteraan petani produsen kopi lokal Indonesia.</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 8. CARA KERJA / PROSES KURASI (Step 1 - 4 seperti di referensi) -->
-    <section id="proses" class="py-20 bg-cream">
+    <!-- 8. FOOTER DENGAN TOMBOL WHATSAPP RESMI OWNER / ADMIN -->
+    <footer class="bg-forest-dark text-cream pt-16 pb-12 border-t border-forest-light">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-2xl mb-14">
-                <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Standar Kualitas</span>
-                <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest mt-1.5">
-                    Proses Dari Kebun ke Cangkir
-                </h2>
-                <p class="text-sm text-espresso-muted mt-2">
-                    Tahapan ketat untuk memastikan mutu biji kopi tetap terjaga dari saat petik hingga sampai ke tangan Anda.
-                </p>
+            
+            <!-- SECTION WA OWNER/ADMIN DALAM FOOTER (Sesuai Permintaan User) -->
+            <div class="bg-gradient-to-r from-forest to-forest-light p-8 sm:p-10 rounded-3xl border border-forest-light shadow-xl mb-14 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-2">
+                        <span>💬</span> Layanan Pelanggan & Konsultasi Resmi
+                    </div>
+                    <h3 class="font-serif font-bold text-2xl sm:text-3xl text-cream">Hubungi Langsung Owner / Admin C3</h3>
+                    <p class="text-xs sm:text-sm text-cream/75 mt-1 max-w-xl">
+                        Punya pertanyaan seputar ketersediaan stok paket 1 kg, kerja sama pasokan cafe, atau konfirmasi nota pesanan? Chat langsung dengan Owner/Admin kami.
+                    </p>
+                </div>
+
+                <!-- Tombol WhatsApp Berisi Nomor Owner/Admin -->
+                @php
+                    $ownerWaNumber = preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890');
+                @endphp
+                <a href="https://wa.me/{{ $ownerWaNumber }}?text=Halo%20Owner/Admin%20Circle%20Concordia%20Coffee%20(C3),%20saya%20ingin%20berkonsultasi%20seputar%20pemesanan%20biji%20kopi." 
+                   target="_blank"
+                   class="flex-shrink-0 px-8 py-4 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center gap-3 shadow-lg shadow-emerald-950/40 transition-all hover:scale-105">
+                    <span class="text-xl">📱</span>
+                    <div class="text-left">
+                        <span class="text-[10px] block opacity-80 uppercase tracking-wider">Chat WhatsApp Owner/Admin</span>
+                        <span class="text-sm font-bold font-mono">{{ $profile->phone ?? '+62 812-3456-7890' }}</span>
+                    </div>
+                </a>
             </div>
 
-            <!-- Steps Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Step 1 -->
+            <!-- Footer Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 text-xs text-cream/70">
                 <div>
-                    <div class="w-9 h-9 rounded-full bg-forest text-cream flex items-center justify-center font-serif font-bold text-sm mb-4">
-                        1
-                    </div>
-                    <h4 class="font-serif font-bold text-lg text-forest mb-2">Petik Selektif</h4>
-                    <p class="text-xs text-espresso-muted leading-relaxed">
-                        Hanya buah ceri kopi merah sempurna (*red cherry*) yang dipanen dari perkebunan dataran tinggi.
-                    </p>
+                    <span class="font-serif font-bold text-base text-cream block mb-2">{{ $profile->name }}</span>
+                    <p class="leading-relaxed mb-3">{{ $profile->about }}</p>
+                    <span class="text-amberCustom italic font-serif">"{{ $profile->tagline }}"</span>
                 </div>
 
-                <!-- Step 2 -->
                 <div>
-                    <div class="w-9 h-9 rounded-full bg-forest text-cream flex items-center justify-center font-serif font-bold text-sm mb-4">
-                        2
-                    </div>
-                    <h4 class="font-serif font-bold text-lg text-forest mb-2">Pascapanen Presisi</h4>
-                    <p class="text-xs text-espresso-muted leading-relaxed">
-                        Proses washed, honey, atau natural dengan fermentasi terkontrol untuk memaksimalkan sweetness alami.
-                    </p>
+                    <h4 class="font-bold text-white uppercase tracking-wider mb-3">Navigasi Utama</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#beranda" class="hover:text-amberCustom">Beranda</a></li>
+                        <li><a href="#origins" class="hover:text-amberCustom">Asal Kopi Kebun</a></li>
+                        <li><a href="#populer" class="hover:text-amberCustom">Kopi Populer (1 kg)</a></li>
+                        <li><a href="#visi-misi" class="hover:text-amberCustom">Visi & Misi</a></li>
+                        <li><a href="{{ route('login') }}" class="hover:text-amberCustom font-bold text-white">Login 4 Role</a></li>
+                    </ul>
                 </div>
 
-                <!-- Step 3 -->
                 <div>
-                    <div class="w-9 h-9 rounded-full bg-forest text-cream flex items-center justify-center font-serif font-bold text-sm mb-4">
-                        3
-                    </div>
-                    <h4 class="font-serif font-bold text-lg text-forest mb-2">Artisan Roasting</h4>
-                    <p class="text-xs text-espresso-muted leading-relaxed">
-                        Disangrai oleh roaster berpengalaman dalam batch kecil (*micro-batch*) agar karakter rasa origin tidak hangus.
-                    </p>
+                    <h4 class="font-bold text-white uppercase tracking-wider mb-3">Ketentuan Penjualan</h4>
+                    <ul class="space-y-2">
+                        <li>• Minimal Order: 1 Paket (1.000 gram)</li>
+                        <li>• Kemasan Alumunium Valve Kedap Udara</li>
+                        <li>• Opsi: Biji Utuh / Gilingan Custom</li>
+                        <li>• Sistem Pemesanan: Khusus Konsumen Terdaftar</li>
+                    </ul>
                 </div>
 
-                <!-- Step 4 -->
                 <div>
-                    <div class="w-9 h-9 rounded-full bg-forest text-cream flex items-center justify-center font-serif font-bold text-sm mb-4">
-                        4
-                    </div>
-                    <h4 class="font-serif font-bold text-lg text-forest mb-2">Cupping & Packaging</h4>
-                    <p class="text-xs text-espresso-muted leading-relaxed">
-                        Uji rasa (*cupping*) sebelum pengemasan dalam pouch berkatup satu arah (*one-way valve*) kedap udara.
-                    </p>
+                    <h4 class="font-bold text-white uppercase tracking-wider mb-3">Alamat & Roastery</h4>
+                    <p class="leading-relaxed mb-2">📍 {{ $profile->address }}</p>
+                    <p class="mb-1">✉️ {{ $profile->email }}</p>
+                    <p class="mb-1">📸 {{ $profile->instagram }}</p>
+                    <p class="font-bold text-emerald-400 mt-2">WA: {{ $profile->phone }}</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- 9. CALL TO ACTION / FORM KONSULTASI (Forest Dark Panel seperti di referensi) -->
-    <section class="bg-forest text-cream py-20 border-t border-forest-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <!-- Text Left -->
-                <div class="lg:col-span-6">
-                    <span class="text-xs font-bold uppercase tracking-widest text-amberCustom">Pemesanan & Pasokan</span>
-                    <h2 class="font-serif font-bold text-3xl sm:text-4xl lg:text-5xl text-cream mt-2 leading-tight">
-                        Siap menikmati seduhan terbaik hari ini?
-                    </h2>
-                    <p class="text-sm text-cream/80 mt-4 leading-relaxed max-w-lg">
-                        Ceritakan kebutuhan biji kopi Anda—baik untuk kebutuhan seduh pribadi di rumah, pasokan cafe, maupun pemesanan grosir. Tim kami siap merespons dengan cepat.
-                    </p>
-                    <div class="mt-8 flex items-center gap-6 text-xs text-cream/70">
-                        <div class="flex items-center gap-2">
-                            <span class="text-amberCustom">📍</span> {{ $profile->address }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Simple Inquiry Card Right -->
-                <div class="lg:col-span-6">
-                    <div class="bg-cream text-espresso p-8 rounded-3xl shadow-xl border border-sand-DEFAULT">
-                        <h4 class="font-serif font-bold text-xl text-forest mb-1">Tanya Stok atau Pesan</h4>
-                        <p class="text-xs text-espresso-muted mb-6">Kirim pesan langsung ke WhatsApp kami untuk konsultasi rasa & rekomendasi gilingan.</p>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-forest mb-1">Nama Pemesan</label>
-                                <input type="text" id="cust_name" placeholder="Misal: Budi / Kedai Kopi Harmoni" class="w-full text-xs px-4 py-3 rounded-xl border border-sand-DEFAULT bg-white focus:outline-none focus:ring-2 focus:ring-forest">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-forest mb-1">Varian Kopi yang Diminati</label>
-                                <select id="cust_coffee" class="w-full text-xs px-4 py-3 rounded-xl border border-sand-DEFAULT bg-white focus:outline-none focus:ring-2 focus:ring-forest">
-                                    @foreach($popularProducts as $p)
-                                        <option value="{{ $p->name }}">{{ $p->name }} (Rp {{ number_format($p->price, 0, ',', '.') }})</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-forest mb-1">Catatan Tambahan (Bentuk Biji / Gilingan)</label>
-                                <input type="text" id="cust_notes" placeholder="Misal: Biji utuh / Giling halus untuk espresso" class="w-full text-xs px-4 py-3 rounded-xl border border-sand-DEFAULT bg-white focus:outline-none focus:ring-2 focus:ring-forest">
-                            </div>
-
-                            <button type="button" onclick="sendOrder()" class="w-full mt-2 py-3.5 rounded-full bg-forest hover:bg-forest-light text-cream font-medium text-xs tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2">
-                                <span>Kirim Permintaan ke WhatsApp</span>
-                                <span class="text-amberCustom">→</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 10. MINIMALIST EDITORIAL FOOTER -->
-    <footer class="bg-forest-dark text-cream/70 py-12 text-xs border-t border-forest-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-                <span class="font-serif font-bold text-sm text-cream">{{ $profile->name }} ({{ $profile->short_name }})</span>
-                <p class="text-[11px] text-cream/50 mt-0.5">&copy; {{ date('Y') }} Circle Concordia Coffee. Tugas Besar Manajemen Sistem Basis Data.</p>
-            </div>
-            <div class="flex items-center gap-6 text-[11px] text-cream/70">
-                <a href="#beranda" class="hover:text-amberCustom">Beranda</a>
-                <a href="#origins" class="hover:text-amberCustom">Asal Kopi</a>
-                <a href="#populer" class="hover:text-amberCustom">Produk Populer</a>
-                <a href="#visi-misi" class="hover:text-amberCustom">Visi & Misi</a>
-                <span class="text-amberCustom">📞 {{ $profile->phone }}</span>
+            <!-- Copyright -->
+            <div class="pt-6 border-t border-forest-light flex flex-col sm:flex-row items-center justify-between text-[11px] text-cream/50 gap-4">
+                <p>&copy; {{ date('Y') }} {{ $profile->name }} ({{ $profile->short_name }}). All rights reserved.</p>
+                <p>Tugas Besar Manajemen Sistem Basis Data (MSBD) • 4 Role & 3 Level</p>
             </div>
         </div>
     </footer>
 
-    <!-- WhatsApp Order Script Helper -->
-    <script>
-        function sendOrder() {
-            const name = document.getElementById('cust_name').value || 'Pelanggan';
-            const coffee = document.getElementById('cust_coffee').value;
-            const notes = document.getElementById('cust_notes').value || 'Biji utuh';
-            const phone = "{{ preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890') }}";
-            
-            const message = `Halo C3 (Circle Concordia Coffee), perkenalkan saya ${name}. Saya ingin memesan biji kopi: *${coffee}*, dengan catatan: ${notes}. Mohon info ketersediaan stoknya. Terima kasih!`;
-            
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-    </script>
+    <!-- Floating WhatsApp Button di Pojok Kanan Bawah untuk Kemudahan Pengunjung -->
+    <a href="https://wa.me/{{ $ownerWaNumber }}?text=Halo%20Admin%20C3,%20saya%20tertarik%20dengan%20biji%20kopi%20Circle%20Concordia." 
+       target="_blank" 
+       title="Chat WhatsApp Owner / Admin"
+       class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center text-2xl shadow-2xl hover:scale-110 transition-transform">
+        💬
+    </a>
 
 </body>
 </html>
