@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $profile->name ?? 'Circle Concordia Coffee' }} ({{ $profile->short_name ?? 'C3' }}) - Specialty Coffee Beans</title>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Fraunces (Editorial Heading) & DM Sans (Modern Clean Body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS (via Vite) & Fallback CDN for instant high-fidelity render -->
+    <!-- Tailwind CSS (via Vite) & Tailwind CDN Configured for Custom Color Palette -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
@@ -20,249 +20,261 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'serif'],
+                        serif: ['"Fraunces"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
                     },
                     colors: {
-                        coffee: {
-                            50: '#FDF8F5',
-                            100: '#F9EDE5',
-                            200: '#F2D9C9',
-                            300: '#E8BFA6',
-                            400: '#D79F7E',
-                            500: '#C07E56',
-                            600: '#A4633E',
-                            700: '#834A2E',
-                            800: '#5E3420',
-                            900: '#3D2114',
-                            950: '#231109',
+                        forest: {
+                            DEFAULT: '#1F3A2E',
+                            light: '#2B4F3F',
+                            dark: '#14271F',
+                            deep: '#0E1B15',
                         },
-                        amberGold: '#D97706',
+                        cream: {
+                            DEFAULT: '#F6F1E7',
+                            light: '#FAF7F2',
+                            dark: '#EDE5D6',
+                        },
+                        espresso: {
+                            DEFAULT: '#2B2118',
+                            muted: '#5A4A3E',
+                            light: '#7A685B',
+                        },
+                        amberCustom: {
+                            DEFAULT: '#D9A05B',
+                            dark: '#8F5A1C',
+                            light: '#F4DEC1',
+                        },
+                        sand: {
+                            DEFAULT: '#EDE4D3',
+                            card: '#E8DDC8',
+                            light: '#F3ECE0',
+                        }
                     }
                 }
             }
         }
     </script>
-</head>
-<body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-coffee-600 selection:text-white">
 
-    <!-- 1. NAVIGATION BAR -->
-    <header class="sticky top-0 z-50 bg-stone-900/90 backdrop-blur-md border-b border-stone-800 text-stone-100 transition-all">
+    <style>
+        body {
+            background-color: #F6F1E7;
+            color: #2B2118;
+        }
+        /* Arch / Kubah styling khas heritage roastery */
+        .arch-frame {
+            border-top-left-radius: 180px;
+            border-top-right-radius: 180px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-forest selection:text-cream">
+
+    <!-- 1. TOP ANNOUNCEMENT BAR -->
+    <div class="bg-forest text-cream text-[12px] py-2 px-4 text-center font-medium border-b border-forest-light tracking-wide flex items-center justify-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-amberCustom animate-pulse"></span>
+        <span>Biji Kopi Specialty Nusantara Terkurasi Langsung dari Petani Lokal • Batch Roasting Mingguan</span>
+    </div>
+
+    <!-- 2. NAVBAR (Warm Editorial Style) -->
+    <header class="sticky top-0 z-50 bg-[#F6F1E7]/95 backdrop-blur-md border-b border-sand-DEFAULT/80 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Brand Logo -->
+            <!-- Brand Identity -->
             <a href="#beranda" class="flex items-center gap-3 group">
-                <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-coffee-700 to-amber-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-coffee-900/40 group-hover:scale-105 transition-transform">
-                    ☕
+                <div class="w-10 h-10 rounded-full bg-forest text-amberCustom flex items-center justify-center font-serif font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
+                    C<span class="text-xs text-white">3</span>
                 </div>
                 <div>
-                    <span class="text-xl font-bold tracking-tight text-white flex items-center gap-1.5 font-serif">
-                        {{ $profile->short_name }} <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-sans font-medium">Coffee</span>
+                    <span class="font-serif font-bold text-xl text-forest tracking-tight block">
+                        {{ $profile->name }}
                     </span>
-                    <p class="text-[11px] text-stone-400 -mt-0.5 tracking-wider uppercase">{{ $profile->name }}</p>
+                    <span class="text-[10px] tracking-widest uppercase text-amberCustom-dark font-semibold block -mt-1">
+                        Specialty Coffee Roasters
+                    </span>
                 </div>
             </a>
 
-            <!-- Menu Navigation -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-300">
-                <a href="#beranda" class="hover:text-amber-400 transition-colors">Beranda</a>
-                <a href="#tentang" class="hover:text-amber-400 transition-colors">Visi & Misi</a>
-                <a href="#origins" class="hover:text-amber-400 transition-colors">Sumber Biji Kopi</a>
-                <a href="#populer" class="hover:text-amber-400 transition-colors">Kopi Populer</a>
-                <a href="#katalog" class="hover:text-amber-400 transition-colors">Semua Produk</a>
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-espresso-muted">
+                <a href="#beranda" class="hover:text-forest transition-colors">Beranda</a>
+                <a href="#origins" class="hover:text-forest transition-colors">Asal Biji Kopi</a>
+                <a href="#populer" class="hover:text-forest transition-colors">Kopi Populer</a>
+                <a href="#visi-misi" class="hover:text-forest transition-colors">Visi & Misi</a>
+                <a href="#proses" class="hover:text-forest transition-colors">Proses Kurasi</a>
             </nav>
 
-            <!-- Action Button -->
-            <div class="flex items-center gap-4">
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890') }}?text=Halo%20C3,%20saya%20ingin%20tanya%20seputar%20biji%20kopi%20Circle%20Concordia" 
+            <!-- CTA Button -->
+            <div>
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890') }}?text=Halo%20C3,%20saya%20ingin%20tanya%20katalog%20biji%20kopi%20Circle%20Concordia" 
                    target="_blank"
-                   class="inline-flex items-center gap-2 bg-gradient-to-r from-coffee-600 to-amber-600 hover:from-coffee-500 hover:to-amber-500 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full shadow-md shadow-coffee-950/30 transition-all hover:scale-105">
-                    <span>Hubungi Kami</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                   class="inline-flex items-center gap-2 bg-forest hover:bg-forest-light text-cream font-medium text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-sm hover:shadow transition-all">
+                    <span>Minta Penawaran</span>
+                    <svg class="w-3.5 h-3.5 text-amberCustom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- 2. HERO SECTION -->
-    <section id="beranda" class="relative min-h-[85vh] flex items-center justify-center bg-stone-950 text-white overflow-hidden">
-        <!-- Background Image with Overlay -->
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1920&auto=format&fit=crop" 
-                 alt="Coffee Farm & Roasted Beans" 
-                 class="w-full h-full object-cover object-center opacity-30 filter brightness-75 scale-105 animate-pulse duration-1000">
-            <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/70 to-transparent"></div>
-            <div class="absolute inset-0 bg-radial-gradient from-transparent via-stone-950/50 to-stone-950"></div>
-        </div>
+    <!-- 3. HERO SECTION (Editorial Layout dengan Arch Image Frame) -->
+    <section id="beranda" class="relative pt-12 pb-20 md:py-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                
+                <!-- Left Column: Editorial Headline -->
+                <div class="lg:col-span-7">
+                    <!-- Kicker / Tag -->
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sand-DEFAULT/60 border border-sand-DEFAULT text-amberCustom-dark text-xs font-semibold tracking-wider uppercase mb-6">
+                        <span>🌱</span>
+                        <span>Single Origin & Specialty Blend Nusantara</span>
+                    </div>
 
-        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-            <!-- Badge -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-medium mb-6">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                Specialty Coffee Beans & Direct Trade Indonesia
-            </div>
+                    <!-- Main Headline -->
+                    <h1 class="font-serif font-bold text-4xl sm:text-5xl lg:text-6xl text-forest leading-[1.15] tracking-tight mb-6">
+                        Kopi pilihan dari kebun langsung ke cangkir Anda.
+                    </h1>
 
-            <!-- Big Title -->
-            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold font-serif tracking-tight leading-tight mb-4">
-                {{ $profile->name }}
-            </h1>
-            
-            <p class="text-lg sm:text-2xl text-amber-400 font-serif italic mb-6">
-                "{{ $profile->tagline }}"
-            </p>
+                    <!-- Paragraph -->
+                    <p class="text-base sm:text-lg text-espresso-muted leading-relaxed max-w-xl mb-8">
+                        {{ $profile->about }}
+                    </p>
 
-            <p class="max-w-2xl mx-auto text-stone-300 text-sm sm:text-base leading-relaxed mb-10">
-                {{ $profile->about }}
-            </p>
+                    <!-- Buttons -->
+                    <div class="flex flex-wrap items-center gap-4">
+                        <a href="#populer" 
+                           class="px-7 py-3.5 rounded-full bg-forest hover:bg-forest-light text-cream font-medium text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                            <span>Jelajahi Kopi Populer</span>
+                            <span class="text-amberCustom">↓</span>
+                        </a>
+                        <a href="#origins" 
+                           class="px-7 py-3.5 rounded-full bg-transparent border-2 border-forest/30 hover:border-forest text-forest font-medium text-sm transition-all">
+                            Lihat Asal Kebun Kopi
+                        </a>
+                    </div>
 
-            <!-- CTA Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#populer" 
-                   class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white font-semibold shadow-lg shadow-amber-900/40 transition-all hover:scale-105">
-                    Lihat Biji Kopi Populer
-                </a>
-                <a href="#origins" 
-                   class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-stone-800/80 hover:bg-stone-800 border border-stone-700 text-stone-200 font-medium hover:text-white transition-all">
-                    Jelajahi Asal Kebun Kopi
-                </a>
-            </div>
-
-            <!-- Key Highlights Stat Bar -->
-            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 pt-10 border-t border-stone-800/80">
-                <div class="p-3">
-                    <span class="block text-2xl sm:text-3xl font-bold text-amber-400 font-serif">{{ $origins->count() }}+</span>
-                    <span class="text-xs text-stone-400 uppercase tracking-wider">Origin Nusantara</span>
+                    <!-- Small Brand Motto -->
+                    <div class="mt-10 pt-6 border-t border-sand-DEFAULT flex items-center gap-3 text-xs text-amberCustom-dark font-medium italic font-serif">
+                        <span class="text-forest not-italic font-sans font-bold">C3 Motto:</span>
+                        "{{ $profile->tagline }}"
+                    </div>
                 </div>
-                <div class="p-3">
-                    <span class="block text-2xl sm:text-3xl font-bold text-amber-400 font-serif">100%</span>
-                    <span class="text-xs text-stone-400 uppercase tracking-wider">Biji Kopi Specialty</span>
+
+                <!-- Right Column: Arch Framed Visual Image + Floating Badge -->
+                <div class="lg:col-span-5 flex justify-center lg:justify-end relative">
+                    <!-- Decorative back shadow glow -->
+                    <div class="absolute -top-6 -right-6 w-72 h-72 rounded-full bg-amberCustom/15 blur-3xl pointer-events-none"></div>
+
+                    <div class="relative w-full max-w-[360px] sm:max-w-[400px]">
+                        <!-- Arch Image Frame -->
+                        <div class="arch-frame overflow-hidden bg-forest shadow-2xl border-4 border-white/60 aspect-[3/4] relative">
+                            <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=900&auto=format&fit=crop" 
+                                 alt="Specialty Coffee Roasting Beans" 
+                                 class="w-full h-full object-cover object-center scale-105 hover:scale-110 transition-transform duration-700 brightness-95">
+                            
+                            <!-- Vignette / Tint -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-forest-dark/80 via-transparent to-transparent"></div>
+                            
+                            <div class="absolute bottom-6 left-6 right-6 text-cream text-center">
+                                <span class="font-serif italic text-sm text-amberCustom">Circle Concordia Coffee</span>
+                                <p class="text-xs text-cream/80 font-sans mt-0.5">Biji Kopi Pilihan Terbaik Nusantara</p>
+                            </div>
+                        </div>
+
+                        <!-- Floating Badge (seperti di referensi) -->
+                        <div class="absolute -bottom-5 -left-4 sm:-left-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-sand-DEFAULT max-w-[220px]">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="w-2 h-2 rounded-full bg-amberCustom"></span>
+                                <span class="text-[11px] font-bold text-forest uppercase tracking-wider">Cupping Score</span>
+                            </div>
+                            <p class="text-xs text-espresso-muted leading-snug">
+                                Rata-rata specialty grade <strong class="text-forest">84+ poin</strong> dengan profil rasa terverifikasi.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-3">
-                    <span class="block text-2xl sm:text-3xl font-bold text-amber-400 font-serif">Direct</span>
-                    <span class="text-xs text-stone-400 uppercase tracking-wider">Kemitraan Petani</span>
-                </div>
-                <div class="p-3">
-                    <span class="block text-2xl sm:text-3xl font-bold text-amber-400 font-serif">Fresh</span>
-                    <span class="text-xs text-stone-400 uppercase tracking-wider">Roasted Weekly</span>
-                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- 3. TENTANG KAMI, VISI & MISI SECTION -->
-    <section id="tentang" class="py-20 bg-stone-100 border-b border-stone-200">
+    <!-- 4. FOREST GREEN VALUE STRIP (Band Banner seperti di referensi) -->
+    <section class="bg-forest text-cream py-10 border-y border-forest-light">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-xs font-bold uppercase tracking-widest text-coffee-600">Filosofi & Komitmen</span>
-                <h2 class="text-3xl sm:text-4xl font-bold font-serif text-stone-900 mt-2">Visi & Misi {{ $profile->short_name }}</h2>
-                <div class="w-16 h-1 bg-amber-600 mx-auto mt-4 rounded-full"></div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                <!-- Visi Card (5 cols) -->
-                <div class="lg:col-span-5 bg-gradient-to-br from-stone-900 to-coffee-950 text-white p-8 sm:p-10 rounded-3xl shadow-xl flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-amber-500/10 pointer-events-none blur-2xl"></div>
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl mb-6">
-                            👁️
-                        </div>
-                        <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold">Visi Kami</span>
-                        <h3 class="text-2xl font-serif font-bold mt-2 mb-4">Lingkaran Harmoni Kopi Dunia</h3>
-                        <blockquote class="text-stone-300 text-sm sm:text-base italic leading-relaxed border-l-2 border-amber-500/60 pl-4 py-1">
-                            "{{ $profile->vision }}"
-                        </blockquote>
-                    </div>
-                    <div class="mt-8 pt-6 border-t border-stone-800 text-xs text-stone-400">
-                        {{ $profile->name }} berkomitmen membawa cita rasa tanah nusantara ke panggung internasional.
-                    </div>
-                </div>
-
-                <!-- Misi Cards (7 cols) -->
-                <div class="lg:col-span-7 bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-stone-200 flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-coffee-100 text-coffee-700 flex items-center justify-center text-2xl mb-6">
-                            🎯
-                        </div>
-                        <span class="text-xs uppercase tracking-widest text-coffee-700 font-semibold">Misi Kami</span>
-                        <h3 class="text-2xl font-serif font-bold text-stone-900 mt-2 mb-6">Tiga Pilar Utama Operasional C3</h3>
-
-                        <div class="space-y-4">
-                            @if(!empty($profile->mission) && is_array($profile->mission))
-                                @foreach($profile->mission as $index => $item)
-                                    <div class="flex items-start gap-4 p-4 rounded-2xl bg-stone-50 border border-stone-100 hover:border-amber-200 transition-colors">
-                                        <div class="w-7 h-7 rounded-full bg-amber-600 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs mt-0.5">
-                                            {{ $index + 1 }}
-                                        </div>
-                                        <p class="text-sm text-stone-700 leading-relaxed font-medium">
-                                            {{ $item }}
-                                        </p>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="mt-8 flex items-center gap-3 text-xs text-stone-500 bg-amber-50/70 p-3.5 rounded-xl border border-amber-200/60">
-                        <span class="text-lg">🌿</span>
-                        <span>Semua biji kopi dipetik saat merah sempurna (*full red cherry*) dan diproses secara higienis ramah lingkungan.</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. SUMBER BIJI KOPI (ORIGINS / DAERAH ASAL) SECTION -->
-    <section id="origins" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-14">
-                <div>
-                    <span class="text-xs font-bold uppercase tracking-widest text-coffee-600">Teritorial & Terroir</span>
-                    <h2 class="text-3xl sm:text-4xl font-bold font-serif text-stone-900 mt-2">Sumber Biji Kopi Nusantara</h2>
-                    <p class="text-stone-500 text-sm mt-2 max-w-xl">
-                        Karakter rasa kopi sangat dipengaruhi oleh ketinggian, iklim mikro, dan tanah tempat tumbuhnya. Kenali asal-usul biji kopi C3.
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                <!-- Col 1 -->
+                <div class="border-b md:border-b-0 md:border-r border-forest-light pb-6 md:pb-0 md:pr-8">
+                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">Asal Tertelusur</span>
+                    <p class="text-xs text-cream/75 leading-relaxed">
+                        Setiap varian biji kopi dilengkapi informasi petani, varietas, ketinggian kebun, dan proses pascapanen yang transparan.
                     </p>
                 </div>
-                <div class="mt-4 md:mt-0 text-sm text-stone-500 font-medium">
-                    Total: <span class="font-bold text-stone-900">{{ $origins->count() }} Daerah Penghasil</span>
+
+                <!-- Col 2 -->
+                <div class="border-b md:border-b-0 md:border-r border-forest-light pb-6 md:pb-0 md:px-8">
+                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">Mutu & Roasting Konsisten</span>
+                    <p class="text-xs text-cream/75 leading-relaxed">
+                        Disangrai dengan kurva profil presisi agar notes rasa manis buah, cokelat, dan aroma floral tetap harmonis di tiap seduhan.
+                    </p>
+                </div>
+
+                <!-- Col 3 -->
+                <div class="md:pl-8">
+                    <span class="text-amberCustom font-serif text-lg font-bold block mb-1">Pengiriman Segar Terjadwal</span>
+                    <p class="text-xs text-cream/75 leading-relaxed">
+                        Dipasok dalam kondisi segar (*fresh roast*) untuk kebutuhan cafe, penikmat seduh manual, maupun konsumsi harian Anda.
+                    </p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Origins Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- 5. SUMBER BIJI KOPI (ASAL KOPI PILIHAN) -->
+    <section id="origins" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Katalog Daerah</span>
+                <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest mt-1.5">
+                    Asal Kopi Pilihan
+                </h2>
+                <p class="text-sm text-espresso-muted mt-2 max-w-2xl">
+                    Jelajahi sentra perkebunan kopi nusantara dengan karakter tanah vulkanik, iklim mikro, dan profil rasa yang berbeda-beda.
+                </p>
+            </div>
+
+            <!-- Origins Grid: Card Bersih dengan Detail Terstruktur -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($origins as $origin)
-                    <div class="group relative rounded-3xl overflow-hidden bg-stone-900 text-white shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-end min-h-[380px]">
-                        <!-- Background Image -->
-                        <img src="{{ $origin->image_url }}" 
-                             alt="{{ $origin->name }}" 
-                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 brightness-75">
-                        
-                        <!-- Gradient Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/60 to-transparent"></div>
-
-                        <!-- Top Badges -->
-                        <div class="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
-                            <span class="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-semibold tracking-wider uppercase text-amber-300 border border-amber-500/30">
-                                📍 {{ $origin->province }}
-                            </span>
-                            <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-medium text-white">
-                                ⛰️ {{ $origin->altitude }}
-                            </span>
-                        </div>
-
-                        <!-- Content -->
-                        <div class="relative z-10 p-6 sm:p-7">
-                            <h3 class="text-2xl font-bold font-serif text-white group-hover:text-amber-300 transition-colors">
-                                {{ $origin->name }}
-                            </h3>
-                            <p class="text-xs text-stone-300 mt-2 line-clamp-3 leading-relaxed">
-                                {{ $origin->description }}
-                            </p>
-
-                            <div class="mt-4 pt-4 border-t border-stone-700/60 flex items-center justify-between text-xs">
-                                <span class="text-stone-400">Varian Tersedia:</span>
-                                <span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-stone-950 font-bold">
-                                    {{ $origin->products_count }} Varian Kopi
+                    <div class="bg-white rounded-2xl p-6 border border-sand-DEFAULT/90 shadow-sm hover:shadow-md hover:border-amberCustom/60 transition-all flex flex-col justify-between group">
+                        <div>
+                            <!-- Header Region & Badge -->
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[11px] font-bold tracking-wider uppercase text-amberCustom-dark">
+                                    {{ $origin->province }}
+                                </span>
+                                <span class="text-[11px] font-medium text-espresso-light bg-cream-dark/60 px-2.5 py-0.5 rounded-full">
+                                    ⛰️ {{ $origin->altitude }}
                                 </span>
                             </div>
+
+                            <!-- Origin Name -->
+                            <h3 class="font-serif font-bold text-2xl text-forest group-hover:text-amberCustom-dark transition-colors">
+                                {{ $origin->name }}
+                            </h3>
+
+                            <!-- Description -->
+                            <p class="text-xs text-espresso-muted mt-2.5 leading-relaxed">
+                                {{ $origin->description }}
+                            </p>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="mt-6 pt-4 border-t border-sand-DEFAULT/60 flex items-center justify-between text-xs">
+                            <span class="text-forest font-medium">
+                                {{ $origin->products_count }} Varian Tersedia
+                            </span>
+                            <a href="#populer" class="text-amberCustom-dark font-semibold hover:text-forest flex items-center gap-1">
+                                <span>Lihat Biji</span>
+                                <span>→</span>
+                            </a>
                         </div>
                     </div>
                 @endforeach
@@ -270,44 +282,49 @@
         </div>
     </section>
 
-    <!-- 5. BIJI KOPI POPULER (FEATURED PRODUCTS) SECTION -->
-    <section id="populer" class="py-20 bg-stone-100 border-t border-stone-200">
+    <!-- 6. BIJI KOPI POPULER (FEATURED / BEST SELLER PRODUCTS) -->
+    <section id="populer" class="py-20 bg-sand-light/50 border-y border-sand-DEFAULT">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="px-4 py-1.5 rounded-full bg-amber-600/10 text-amber-700 text-xs font-bold uppercase tracking-wider inline-block mb-3">
-                    ★ Paling Diminati Pelanggan
-                </span>
-                <h2 class="text-3xl sm:text-4xl font-bold font-serif text-stone-900">Biji Kopi Populer C3</h2>
-                <p class="text-stone-600 text-sm mt-3">
-                    Deretan biji kopi terfavorit dengan penjualan tertinggi, disangrai presisi untuk mengeluarkan aroma dan profil rasa terbaik.
-                </p>
-                <div class="w-16 h-1 bg-amber-600 mx-auto mt-4 rounded-full"></div>
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Favorit Pelanggan</span>
+                    <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest mt-1.5">
+                        Koleksi Biji Kopi Populer
+                    </h2>
+                    <p class="text-sm text-espresso-muted mt-2 max-w-xl">
+                        Varian biji kopi yang paling banyak dipesan dengan keseimbangan aroma, keasaman manis, dan krema yang melimpah.
+                    </p>
+                </div>
+                <div class="mt-4 md:mt-0 text-xs font-medium text-espresso-muted bg-white px-4 py-2 rounded-full border border-sand-DEFAULT">
+                    Kemasan Netto: <strong class="text-forest">250 gram</strong> (Biji / Giling)
+                </div>
             </div>
 
             <!-- Products Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($popularProducts as $product)
-                    <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-stone-200/80 transition-all duration-300 flex flex-col group">
-                        <!-- Image Container with Badges -->
-                        <div class="relative h-64 overflow-hidden bg-stone-100">
+                    <div class="bg-white rounded-2xl overflow-hidden border border-sand-DEFAULT shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+                        
+                        <!-- Product Image Container -->
+                        <div class="relative h-60 overflow-hidden bg-sand-DEFAULT/30">
                             <img src="{{ $product->main_image }}" 
                                  alt="{{ $product->name }}" 
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             
-                            <!-- Popular Badge -->
-                            <div class="absolute top-4 left-4 z-10 flex gap-2">
-                                <span class="px-3 py-1 rounded-full bg-amber-600 text-white font-bold text-xs shadow-md flex items-center gap-1">
-                                    <span>🔥</span> Populer
-                                </span>
-                                <span class="px-2.5 py-1 rounded-full bg-stone-900/80 backdrop-blur-md text-stone-200 font-medium text-xs">
+                            <!-- Origin Tag Pill -->
+                            <div class="absolute top-3 left-3 flex gap-1.5">
+                                <span class="px-3 py-1 rounded-full bg-forest text-cream text-[11px] font-semibold tracking-wide shadow">
                                     {{ $product->category->name }}
+                                </span>
+                                <span class="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-amberCustom-dark text-[11px] font-bold">
+                                    Best Seller
                                 </span>
                             </div>
 
                             <!-- Roast Level Tag -->
-                            <div class="absolute bottom-3 right-3 z-10">
-                                <span class="px-3 py-1 rounded-lg bg-stone-950/80 backdrop-blur-md text-amber-300 text-xs font-semibold">
-                                    ♨️ {{ $product->roast_level }}
+                            <div class="absolute bottom-3 right-3">
+                                <span class="px-2.5 py-1 rounded-md bg-forest-dark/90 backdrop-blur-sm text-amberCustom text-[11px] font-medium">
+                                    {{ $product->roast_level }} Roast
                                 </span>
                             </div>
                         </div>
@@ -315,27 +332,24 @@
                         <!-- Card Body -->
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <div class="flex items-center gap-1.5 text-xs text-coffee-700 font-semibold mb-1">
-                                    <svg class="w-3.5 h-3.5 text-amber-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
-                                    <span>{{ $product->origin->name }}</span>
-                                    <span class="text-stone-300">•</span>
-                                    <span class="text-stone-500 font-normal">{{ $product->process_method }}</span>
+                                <div class="text-[11px] text-amberCustom-dark font-semibold tracking-wide uppercase mb-1">
+                                    📍 {{ $product->origin->name }} • {{ $product->process_method }}
                                 </div>
 
-                                <h3 class="text-xl font-bold font-serif text-stone-900 group-hover:text-amber-700 transition-colors">
+                                <h3 class="font-serif font-bold text-xl text-forest group-hover:text-amberCustom-dark transition-colors">
                                     {{ $product->name }}
                                 </h3>
 
-                                <p class="text-xs text-stone-500 mt-2 line-clamp-2 leading-relaxed">
+                                <p class="text-xs text-espresso-muted mt-2 line-clamp-2 leading-relaxed">
                                     {{ $product->description }}
                                 </p>
 
-                                <!-- Flavor Notes Pills -->
-                                <div class="mt-4">
-                                    <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider block mb-1.5">Karakter Rasa (Notes):</span>
+                                <!-- Flavor Notes -->
+                                <div class="mt-4 pt-3 border-t border-sand-DEFAULT/60">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-espresso-light block mb-1.5">Flavor Notes:</span>
                                     <div class="flex flex-wrap gap-1.5">
                                         @foreach(explode(',', $product->flavor_notes) as $note)
-                                            <span class="px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 text-[11px] font-medium border border-stone-200">
+                                            <span class="px-2.5 py-0.5 rounded-full bg-cream text-forest text-[11px] font-medium border border-sand-DEFAULT">
                                                 {{ trim($note) }}
                                             </span>
                                         @endforeach
@@ -343,21 +357,23 @@
                                 </div>
                             </div>
 
-                            <!-- Bottom Price & Action -->
-                            <div class="mt-6 pt-5 border-t border-stone-100 flex items-center justify-between">
+                            <!-- Bottom Price & Order CTA -->
+                            <div class="mt-6 pt-4 border-t border-sand-DEFAULT/80 flex items-center justify-between">
                                 <div>
-                                    <span class="text-[11px] text-stone-400 block font-medium">Isi {{ $product->weight_grams }}g</span>
-                                    <span class="text-xl font-bold text-stone-900 font-serif">
+                                    <span class="text-[10px] text-espresso-light block">Harga per pack</span>
+                                    <span class="font-serif font-bold text-xl text-forest">
                                         Rp {{ number_format($product->price, 0, ',', '.') }}
                                     </span>
                                 </div>
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890') }}?text=Halo%20C3,%20saya%20mau%20pesan%20biji%20kopi%20{{ urlencode($product->name) }}" 
+
+                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890') }}?text=Halo%20C3,%20saya%20tertarik%20memesan%20biji%20kopi%20{{ urlencode($product->name) }}" 
                                    target="_blank"
-                                   class="px-4 py-2 rounded-xl bg-stone-900 hover:bg-amber-600 text-white font-medium text-xs flex items-center gap-1.5 shadow-sm transition-colors">
-                                    <span>Beli Sekarang</span>
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                                   class="px-4 py-2 rounded-full bg-forest hover:bg-forest-light text-cream font-medium text-xs flex items-center gap-1.5 shadow-sm transition-all hover:scale-105">
+                                    <span>Pesan Kopi</span>
+                                    <svg class="w-3.5 h-3.5 text-amberCustom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 @endforeach
@@ -365,123 +381,219 @@
         </div>
     </section>
 
-    <!-- 6. SEMUA KOLEKSI PRODUK (KATALOG LENGKAP) -->
-    <section id="katalog" class="py-20 bg-white">
+    <!-- 7. VISI & MISI (Filosofi Circle Concordia Coffee) -->
+    <section id="visi-misi" class="py-20 bg-sand">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-                <div>
-                    <span class="text-xs font-bold uppercase tracking-widest text-coffee-600">Pilihan Menyeluruh</span>
-                    <h2 class="text-3xl font-bold font-serif text-stone-900 mt-1">Katalog Semua Biji Kopi</h2>
-                    <p class="text-stone-500 text-sm mt-1">
-                        Jelajahi seluruh koleksi biji kopi nusantara yang dipanggang segar oleh roastery kami.
-                    </p>
-                </div>
-                <div class="mt-4 md:mt-0 flex gap-2">
-                    @foreach($categories as $cat)
-                        <span class="px-3 py-1 rounded-full bg-stone-100 text-stone-600 text-xs font-medium border border-stone-200">
-                            {{ $cat->name }} ({{ $cat->products_count }})
-                        </span>
-                    @endforeach
-                </div>
+            <div class="max-w-3xl mb-14">
+                <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Dedikasi Brand</span>
+                <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest mt-1.5">
+                    Visi & Misi Usaha C3
+                </h2>
+                <p class="text-sm text-espresso-muted mt-2">
+                    Mengapa kami menamakan diri <strong>Circle Concordia Coffee</strong>: lingkaran harmoni yang menghubungkan petani, roastery, dan pecinta kopi.
+                </p>
             </div>
 
-            <!-- Table / Compact Card Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($allProducts as $item)
-                    <div class="p-5 rounded-2xl border border-stone-200 hover:border-amber-400 bg-stone-50/50 hover:bg-white transition-all flex gap-4 items-center">
-                        <img src="{{ $item->main_image }}" alt="{{ $item->name }}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0">
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-stone-200 text-stone-700">{{ $item->category->name }}</span>
-                                <span class="text-xs text-amber-600 font-semibold truncate">{{ $item->origin->name }}</span>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                <!-- Visi Card (Forest Style) -->
+                <div class="lg:col-span-5 bg-forest text-cream p-8 sm:p-10 rounded-3xl shadow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-forest-light border border-amberCustom/30 flex items-center justify-center text-amberCustom text-xl font-serif mb-6">
+                            ✦
+                        </div>
+                        <span class="text-xs uppercase tracking-widest text-amberCustom font-bold">Visi Utama</span>
+                        <h3 class="font-serif font-bold text-2xl sm:text-3xl mt-2 mb-4 text-cream">
+                            Lingkaran Harmoni Kopi Dunia
+                        </h3>
+                        <blockquote class="text-sm sm:text-base italic font-serif text-cream/90 leading-relaxed border-l-2 border-amberCustom pl-4 py-1">
+                            "{{ $profile->vision }}"
+                        </blockquote>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-forest-light text-xs text-cream/70">
+                        Fokus pada perdagangan langsung (*direct trade*) yang adil dan apresiasi kualitas hasil bumi Indonesia.
+                    </div>
+                </div>
+
+                <!-- Misi Card (Clean White Style) -->
+                <div class="lg:col-span-7 bg-white p-8 sm:p-10 rounded-3xl border border-sand-DEFAULT/90 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-amberCustom-dark font-bold">Misi & Landasan Kerja</span>
+                        <h3 class="font-serif font-bold text-2xl text-forest mt-1.5 mb-6">
+                            3 Komitmen Operasional Kami
+                        </h3>
+
+                        <div class="space-y-4">
+                            @if(!empty($profile->mission) && is_array($profile->mission))
+                                @foreach($profile->mission as $idx => $misi)
+                                    <div class="flex items-start gap-4 p-4 rounded-xl bg-cream-light border border-sand-DEFAULT/80">
+                                        <div class="w-7 h-7 rounded-full bg-forest text-amberCustom flex-shrink-0 flex items-center justify-center font-bold text-xs font-serif mt-0.5">
+                                            0{{ $idx + 1 }}
+                                        </div>
+                                        <p class="text-xs sm:text-sm text-espresso-muted leading-relaxed font-medium">
+                                            {{ $misi }}
+                                        </p>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-xs text-espresso-light flex items-center gap-2">
+                        <span class="text-amberCustom-dark font-bold">✓</span>
+                        <span>Mendukung pertanian kopi yang berkelanjutan dan regeneratif.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. CARA KERJA / PROSES KURASI (Step 1 - 4 seperti di referensi) -->
+    <section id="proses" class="py-20 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mb-14">
+                <span class="text-xs font-bold uppercase tracking-widest text-amberCustom-dark">Standar Kualitas</span>
+                <h2 class="font-serif font-bold text-3xl sm:text-4xl text-forest mt-1.5">
+                    Proses Dari Kebun ke Cangkir
+                </h2>
+                <p class="text-sm text-espresso-muted mt-2">
+                    Tahapan ketat untuk memastikan mutu biji kopi tetap terjaga dari saat petik hingga sampai ke tangan Anda.
+                </p>
+            </div>
+
+            <!-- Steps Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div>
+                    <div class="w-9 h-9 rounded-full bg-forest text-cream flex items-center justify-center font-serif font-bold text-sm mb-4">
+                        1
+                    </div>
+                    <h4 class="font-serif font-bold text-lg text-forest mb-2">Petik Selektif</h4>
+                    <p class="text-xs text-espresso-muted leading-relaxed">
+                        Hanya buah ceri kopi merah sempurna (*red cherry*) yang dipanen dari perkebunan dataran tinggi.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div>
+                    <div class="w-9 h-9 rounded-full bg-forest text-cream flex items-center justify-center font-serif font-bold text-sm mb-4">
+                        2
+                    </div>
+                    <h4 class="font-serif font-bold text-lg text-forest mb-2">Pascapanen Presisi</h4>
+                    <p class="text-xs text-espresso-muted leading-relaxed">
+                        Proses washed, honey, atau natural dengan fermentasi terkontrol untuk memaksimalkan sweetness alami.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div>
+                    <div class="w-9 h-9 rounded-full bg-forest text-cream flex items-center justify-center font-serif font-bold text-sm mb-4">
+                        3
+                    </div>
+                    <h4 class="font-serif font-bold text-lg text-forest mb-2">Artisan Roasting</h4>
+                    <p class="text-xs text-espresso-muted leading-relaxed">
+                        Disangrai oleh roaster berpengalaman dalam batch kecil (*micro-batch*) agar karakter rasa origin tidak hangus.
+                    </p>
+                </div>
+
+                <!-- Step 4 -->
+                <div>
+                    <div class="w-9 h-9 rounded-full bg-forest text-cream flex items-center justify-center font-serif font-bold text-sm mb-4">
+                        4
+                    </div>
+                    <h4 class="font-serif font-bold text-lg text-forest mb-2">Cupping & Packaging</h4>
+                    <p class="text-xs text-espresso-muted leading-relaxed">
+                        Uji rasa (*cupping*) sebelum pengemasan dalam pouch berkatup satu arah (*one-way valve*) kedap udara.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. CALL TO ACTION / FORM KONSULTASI (Forest Dark Panel seperti di referensi) -->
+    <section class="bg-forest text-cream py-20 border-t border-forest-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Text Left -->
+                <div class="lg:col-span-6">
+                    <span class="text-xs font-bold uppercase tracking-widest text-amberCustom">Pemesanan & Pasokan</span>
+                    <h2 class="font-serif font-bold text-3xl sm:text-4xl lg:text-5xl text-cream mt-2 leading-tight">
+                        Siap menikmati seduhan terbaik hari ini?
+                    </h2>
+                    <p class="text-sm text-cream/80 mt-4 leading-relaxed max-w-lg">
+                        Ceritakan kebutuhan biji kopi Anda—baik untuk kebutuhan seduh pribadi di rumah, pasokan cafe, maupun pemesanan grosir. Tim kami siap merespons dengan cepat.
+                    </p>
+                    <div class="mt-8 flex items-center gap-6 text-xs text-cream/70">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amberCustom">📍</span> {{ $profile->address }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simple Inquiry Card Right -->
+                <div class="lg:col-span-6">
+                    <div class="bg-cream text-espresso p-8 rounded-3xl shadow-xl border border-sand-DEFAULT">
+                        <h4 class="font-serif font-bold text-xl text-forest mb-1">Tanya Stok atau Pesan</h4>
+                        <p class="text-xs text-espresso-muted mb-6">Kirim pesan langsung ke WhatsApp kami untuk konsultasi rasa & rekomendasi gilingan.</p>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-forest mb-1">Nama Pemesan</label>
+                                <input type="text" id="cust_name" placeholder="Misal: Budi / Kedai Kopi Harmoni" class="w-full text-xs px-4 py-3 rounded-xl border border-sand-DEFAULT bg-white focus:outline-none focus:ring-2 focus:ring-forest">
                             </div>
-                            <h4 class="text-sm font-bold text-stone-900 truncate">{{ $item->name }}</h4>
-                            <p class="text-xs text-stone-500 mt-0.5 font-serif font-bold">
-                                Rp {{ number_format($item->price, 0, ',', '.') }} <span class="text-[10px] font-sans text-stone-400 font-normal">/ {{ $item->weight_grams }}g</span>
-                            </p>
+                            <div>
+                                <label class="block text-xs font-semibold text-forest mb-1">Varian Kopi yang Diminati</label>
+                                <select id="cust_coffee" class="w-full text-xs px-4 py-3 rounded-xl border border-sand-DEFAULT bg-white focus:outline-none focus:ring-2 focus:ring-forest">
+                                    @foreach($popularProducts as $p)
+                                        <option value="{{ $p->name }}">{{ $p->name }} (Rp {{ number_format($p->price, 0, ',', '.') }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-forest mb-1">Catatan Tambahan (Bentuk Biji / Gilingan)</label>
+                                <input type="text" id="cust_notes" placeholder="Misal: Biji utuh / Giling halus untuk espresso" class="w-full text-xs px-4 py-3 rounded-xl border border-sand-DEFAULT bg-white focus:outline-none focus:ring-2 focus:ring-forest">
+                            </div>
+
+                            <button type="button" onclick="sendOrder()" class="w-full mt-2 py-3.5 rounded-full bg-forest hover:bg-forest-light text-cream font-medium text-xs tracking-wider uppercase transition-all shadow-md flex items-center justify-center gap-2">
+                                <span>Kirim Permintaan ke WhatsApp</span>
+                                <span class="text-amberCustom">→</span>
+                            </button>
                         </div>
                     </div>
-                @endforeach
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- 7. FOOTER SECTION -->
-    <footer class="bg-stone-950 text-stone-300 pt-16 pb-12 border-t border-stone-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
-                <!-- Col 1: Brand Info -->
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-coffee-700 to-amber-600 flex items-center justify-center text-white font-bold text-lg">
-                            ☕
-                        </div>
-                        <span class="text-xl font-bold text-white font-serif">{{ $profile->name }}</span>
-                    </div>
-                    <p class="text-xs text-stone-400 leading-relaxed mb-4">
-                        {{ $profile->about }}
-                    </p>
-                    <span class="inline-block text-xs text-amber-400 italic font-serif">
-                        "{{ $profile->tagline }}"
-                    </span>
-                </div>
-
-                <!-- Col 2: Navigasi Cepat -->
-                <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Navigasi</h4>
-                    <ul class="space-y-2.5 text-xs text-stone-400">
-                        <li><a href="#beranda" class="hover:text-amber-400 transition-colors">Beranda Utama</a></li>
-                        <li><a href="#tentang" class="hover:text-amber-400 transition-colors">Visi & Misi Perusahaan</a></li>
-                        <li><a href="#origins" class="hover:text-amber-400 transition-colors">Peta Asal Biji Kopi</a></li>
-                        <li><a href="#populer" class="hover:text-amber-400 transition-colors">Produk Paling Populer</a></li>
-                        <li><a href="#katalog" class="hover:text-amber-400 transition-colors">Katalog Semua Biji Kopi</a></li>
-                    </ul>
-                </div>
-
-                <!-- Col 3: Asal Daerah Unggulan -->
-                <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Origin Unggulan</h4>
-                    <ul class="space-y-2 text-xs text-stone-400">
-                        @foreach($origins->take(4) as $o)
-                            <li class="flex items-center gap-2">
-                                <span class="text-amber-500">•</span>
-                                <span>{{ $o->name }} ({{ $o->altitude }})</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                <!-- Col 4: Kontak & Alamat -->
-                <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Kontak Kami</h4>
-                    <ul class="space-y-3 text-xs text-stone-400">
-                        <li class="flex items-start gap-2.5">
-                            <span class="text-amber-500 mt-0.5">📍</span>
-                            <span>{{ $profile->address }}</span>
-                        </li>
-                        <li class="flex items-center gap-2.5">
-                            <span class="text-amber-500">📞</span>
-                            <span>{{ $profile->phone }}</span>
-                        </li>
-                        <li class="flex items-center gap-2.5">
-                            <span class="text-amber-500">✉️</span>
-                            <span>{{ $profile->email }}</span>
-                        </li>
-                        <li class="flex items-center gap-2.5">
-                            <span class="text-amber-500">📸</span>
-                            <span>{{ $profile->instagram }}</span>
-                        </li>
-                    </ul>
-                </div>
+    <!-- 10. MINIMALIST EDITORIAL FOOTER -->
+    <footer class="bg-forest-dark text-cream/70 py-12 text-xs border-t border-forest-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <span class="font-serif font-bold text-sm text-cream">{{ $profile->name }} ({{ $profile->short_name }})</span>
+                <p class="text-[11px] text-cream/50 mt-0.5">&copy; {{ date('Y') }} Circle Concordia Coffee. Tugas Besar Manajemen Sistem Basis Data.</p>
             </div>
-
-            <!-- Copyright -->
-            <div class="pt-8 border-t border-stone-900 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
-                <p>&copy; {{ date('Y') }} {{ $profile->name }} ({{ $profile->short_name }}). All rights reserved.</p>
-                <p class="text-stone-400">Tugas Besar Manajemen Sistem Basis Data (MSBD)</p>
+            <div class="flex items-center gap-6 text-[11px] text-cream/70">
+                <a href="#beranda" class="hover:text-amberCustom">Beranda</a>
+                <a href="#origins" class="hover:text-amberCustom">Asal Kopi</a>
+                <a href="#populer" class="hover:text-amberCustom">Produk Populer</a>
+                <a href="#visi-misi" class="hover:text-amberCustom">Visi & Misi</a>
+                <span class="text-amberCustom">📞 {{ $profile->phone }}</span>
             </div>
         </div>
     </footer>
+
+    <!-- WhatsApp Order Script Helper -->
+    <script>
+        function sendOrder() {
+            const name = document.getElementById('cust_name').value || 'Pelanggan';
+            const coffee = document.getElementById('cust_coffee').value;
+            const notes = document.getElementById('cust_notes').value || 'Biji utuh';
+            const phone = "{{ preg_replace('/[^0-9]/', '', $profile->phone ?? '6281234567890') }}";
+            
+            const message = `Halo C3 (Circle Concordia Coffee), perkenalkan saya ${name}. Saya ingin memesan biji kopi: *${coffee}*, dengan catatan: ${notes}. Mohon info ketersediaan stoknya. Terima kasih!`;
+            
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+    </script>
 
 </body>
 </html>
