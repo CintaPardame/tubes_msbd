@@ -22,6 +22,12 @@
     </div>
 
     <!-- Metric Summary -->
+     <div class="flex justify-end">
+    <a href="{{ route('petani.pasokan-panen') }}"
+       class="bg-forest hover:bg-forest-light text-cream px-6 py-3 rounded-xl font-semibold">
+        Kelola Pasokan Panen
+    </a>
+ </div>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div class="bg-white p-6 rounded-3xl border border-sand shadow-sm flex items-center justify-between">
             <div>

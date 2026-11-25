@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SupplyBatchController;
 use Illuminate\Support\Facades\Route;
 
 // Public Landing Page
@@ -24,6 +25,10 @@ Route::middleware('auth')->group(function () {
     // Role-based Dashboards (Admin, Kasir, Petani, User)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::patch('/dashboard/orders/{order}/status', [DashboardController::class, 'updateOrderStatus'])->name('dashboard.order.status');
+
+    // Pasokan Panen Petani
+    Route::get('/petani/pasokan-panen', [SupplyBatchController::class, 'index'])->name('petani.pasokan-panen');
+    Route::post('/petani/pasokan-panen', [SupplyBatchController::class, 'store'])->name('petani.pasokan-panen.store');
 
     // Order Biji Kopi (Per Paket 1 kg)
     Route::get('/order/create', [OrderController::class, 'create'])->name('orders.create');
