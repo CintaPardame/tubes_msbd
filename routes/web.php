@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SupplyBatchController;
+use App\Http\Controllers\SupplyOfferController;
 use Illuminate\Support\Facades\Route;
 
 // Public Landing Page
@@ -29,6 +30,10 @@ Route::middleware('auth')->group(function () {
     // Pasokan Panen Petani
     Route::get('/petani/pasokan-panen', [SupplyBatchController::class, 'index'])->name('petani.pasokan-panen');
     Route::post('/petani/pasokan-panen', [SupplyBatchController::class, 'store'])->name('petani.pasokan-panen.store');
+
+  // Penawaran Pasokan Petani
+    Route::get('/petani/penawaran-pasokan', [SupplyOfferController::class, 'index'])->name('petani.penawaran-pasokan');
+    Route::post('/petani/penawaran-pasokan', [SupplyOfferController::class, 'store'])->name('petani.penawaran-pasokan.store');
 
     // Order Biji Kopi (Per Paket 1 kg)
     Route::get('/order/create', [OrderController::class, 'create'])->name('orders.create');

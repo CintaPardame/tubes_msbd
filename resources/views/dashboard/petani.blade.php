@@ -22,10 +22,15 @@
     </div>
 
     <!-- Metric Summary -->
-     <div class="flex justify-end">
+     <div class="flex flex-wrap justify-end gap-3">
     <a href="{{ route('petani.pasokan-panen') }}"
-       class="bg-forest hover:bg-forest-light text-cream px-6 py-3 rounded-xl font-semibold">
+        class="bg-forest hover:bg-forest-light text-cream px-6 py-3 rounded-xl font-semibold">
         Kelola Pasokan Panen
+    </a>
+
+    <a href="{{ route('petani.penawaran-pasokan') }}"
+        class="bg-forest hover:bg-forest-light text-cream px-6 py-3 rounded-xl font-semibold">
+        Penawaran Pasokan
     </a>
  </div>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
