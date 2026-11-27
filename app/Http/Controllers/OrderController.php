@@ -30,6 +30,8 @@ class OrderController extends Controller
         $productId = $request->query('product_id');
         $selectedProduct = $productId ? Product::with('origin')->find($productId) : null;
         $products = Product::with('origin')->where('stock', '>', 0)->get();
+        $products = Product::with('origin')->get();
+        $selectedProduct = null;
 
         /** @var User $user */
         $user = Auth::user();

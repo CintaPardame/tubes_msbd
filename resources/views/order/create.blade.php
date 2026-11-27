@@ -38,16 +38,12 @@
 
     <!-- Top Navigation Container -->
     <div class="max-w-4xl mx-auto mb-8 flex items-center justify-between">
-        <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-xs font-semibold text-forest hover:text-amber-800 transition-colors">
-            <span>← Kembali ke Beranda</span>
-        </a>
 
-        <div class="flex items-center gap-3 text-xs">
+        <div class="flex items-center gap-3 text-xs ml-auto">
             <span class="text-stone-500">Masuk sebagai:</span>
             <span class="font-bold text-forest bg-white px-3 py-1 rounded-full border border-sand shadow-sm">
                 👤 {{ $user->name }} ({{ $user->role_label }})
             </span>
-            <a href="{{ route('dashboard') }}" class="text-amber-800 hover:underline font-medium">Dashboard</a>
         </div>
     </div>
 
@@ -64,6 +60,22 @@
                 Pemesanan biji kopi di C3 dihitung dalam satuan <strong>paket utuh (1 paket = 1 kg / 1.000 gram)</strong> untuk menjaga kesegaran proses sangrai batch mingguan.
             </p>
         </div>
+
+        <!-- Navigasi: Kembali dan Dashboard -->
+        <div class="px-8 sm:px-10 pt-5 pb-4 flex items-center justify-between border-b border-sand">
+
+            <a href="{{ route('home') }}"
+               class="text-xs font-semibold text-forest hover:text-amber-800">
+                ← Kembali ke Beranda
+            </a>
+
+            <a href="{{ route('dashboard') }}"
+               class="text-xs font-semibold text-amber-800 hover:underline">
+                Dashboard →
+            </a>
+
+        </div>
+
 
         @if(session('error'))
             <div class="m-8 mb-0 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
@@ -82,6 +94,7 @@
                 </label>
                 <select name="product_id" id="product_id" onchange="updateSummary()" required
                         class="w-full text-xs sm:text-sm px-4 py-3.5 rounded-xl border border-sand bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest text-espresso">
+                        <option value="" selected hidden> -- Pilih Biji Kopi --</option>
                     @foreach($products as $p)
                         <option value="{{ $p->id }}" 
                                 data-price="{{ $p->price }}" 
@@ -119,9 +132,10 @@
                     </label>
                     <p class="text-[11px] text-stone-500 mb-3">Sesuaikan dengan alat seduh yang Anda gunakan.</p>
 
-                    <select name="grind_size" id="grind_size" required
+                    <select name="grind_size" id="grind_size"  onchange="updateSummary()" required
                             class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-sand bg-white focus:ring-2 focus:ring-forest text-espresso">
-                        <option value="Biji Utuh" selected>Biji Utuh (Whole Bean - Sangat Disarankan)</option>
+                        <option value="" selected hidden> -- Pilih Bentuk Biji Kopi --</option>
+                        <option value="Biji Utuh">Biji Utuh (Whole Bean - Sangat Disarankan)</option>
                         <option value="Giling Kasar (Cold Brew/French Press)">Giling Kasar (Cold Brew / French Press)</option>
                         <option value="Giling Sedang (V60/Filter)">Giling Sedang (V60 / Pour Over / Aeropress)</option>
                         <option value="Giling Halus (Espresso/Tubruk)">Giling Halus (Espresso Machine / Kopi Tubruk)</option>
@@ -187,9 +201,50 @@
 
     <!-- Script Kalkulator Realtime -->
     <script>
+        function formatRupiah(angka) {
+    return 'Rp ' + Number(angka).toLocaleString('id-ID');
+}
+
         function updateSummary() {
             const select = document.getElementById('product_id');
             const selectedOption = select.options[select.selectedIndex];
+
+            const productSelect = document.getElementById('product_id');
+            const grindSelect = document.getElementById('grind_size');
+
+            const selectedProduct = productSelect.value;
+            const selectedGrind = grindSelect.value;
+
+            if (selectedProduct === "" && selectedGrind === "") {
+                document.getElementById('summary_title').textContent =
+                    "Pilihlah Biji Kopi dan Bentuk Biji";
+
+                document.getElementById('summary_calc').textContent = "";
+
+                document.getElementById('total_price_text').textContent = "Rp 0";
+
+            
+                return;
+            }
+
+            if (selectedProduct === "") {
+                document.getElementById('summary_title').textContent =
+                    "Pilihlah Biji Kopi";
+                
+
+                document.getElementById('total_price_text').innerText = 'Rp 0';
+            
+                return;
+            }
+
+            if (selectedGrind === "") {
+                document.getElementById('summary_title').textContent =
+                    "Pilihlah Bentuk Biji Kopi";
+            
+                document.getElementById('total_price_text').textContent = "Rp 0";
+            
+                return;
+            }
             
             const price = parseFloat(selectedOption.getAttribute('data-price') || 0);
             const name = selectedOption.getAttribute('data-name') || '';
