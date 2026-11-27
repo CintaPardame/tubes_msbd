@@ -18,6 +18,7 @@ class Product extends Model
         'roast_level',
         'process_method',
         'price',
+        'min_price',
         'weight_grams',
         'stock',
         'flavor_notes',
@@ -28,10 +29,21 @@ class Product extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'min_price' => 'decimal:2',
         'is_popular' => 'boolean',
         'weight_grams' => 'integer',
         'stock' => 'integer',
     ];
+
+    public function promotions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Promotion::class);
+    }
+
+    public function roastingBatches(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(RoastingBatch::class);
+    }
 
     public function origin(): BelongsTo
     {
