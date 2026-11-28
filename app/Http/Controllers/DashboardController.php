@@ -6,6 +6,9 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\Origin;
 use App\Models\Product;
+use App\Models\Promotion;
+use App\Models\RoastingBatch;
+use App\Models\Supply;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,8 +25,11 @@ class DashboardController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        if ($user->isAdmin()) {
+            return $this->adminDashboard();
+        }
+
         return match ($user->role) {
-            'admin' => $this->adminDashboard(),
             'kasir' => $this->kasirDashboard(),
             'petani' => $this->petaniDashboard(),
             default => $this->userDashboard(),
@@ -35,19 +41,42 @@ class DashboardController extends Controller
      */
     private function adminDashboard(): View
     {
+        $totalRevenue = (float) Order::where('status', '!=', 'dibatalkan')->sum('total_amount');
+        $totalFarmerCost = (float) Supply::where('status', 'disetujui')->sum('total_purchase_cost');
+        $totalRoastingCost = (float) RoastingBatch::sum('roasting_cost');
+        $netProfit = $totalRevenue - ($totalFarmerCost + $totalRoastingCost);
+
         $stats = [
             'total_users' => User::count(),
             'total_orders' => Order::count(),
-            'total_revenue' => Order::where('status', '!=', 'dibatalkan')->sum('total_amount'),
+            'total_revenue' => $totalRevenue,
+            'total_farmer_cost' => $totalFarmerCost,
+            'total_roasting_cost' => $totalRoastingCost,
+            'net_profit' => $netProfit,
             'total_products' => Product::count(),
             'total_origins' => Origin::count(),
+            'total_batches' => RoastingBatch::count(),
+            'total_supplies_pending' => Supply::where('status', 'menunggu')->count(),
         ];
 
         $users = User::orderBy('level')->orderBy('role')->get();
         $recentOrders = Order::with(['user', 'items.product'])->latest()->take(8)->get();
-        $products = Product::with('origin')->get();
+        $products = Product::with(['origin', 'promotions'])->get();
+        $supplies = Supply::with(['user', 'approver'])->latest()->take(10)->get();
+        $approvedSupplies = Supply::where('status', 'disetujui')->latest()->get();
+        $promotions = Promotion::with('product')->latest()->get();
+        $recentBatches = RoastingBatch::with(['product', 'supply'])->latest()->take(5)->get();
 
-        return view('dashboard.admin', compact('stats', 'users', 'recentOrders', 'products'));
+        return view('dashboard.admin', compact(
+            'stats',
+            'users',
+            'recentOrders',
+            'products',
+            'supplies',
+            'approvedSupplies',
+            'promotions',
+            'recentBatches'
+        ));
     }
 
     /**

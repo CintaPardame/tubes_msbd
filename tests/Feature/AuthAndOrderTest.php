@@ -27,7 +27,8 @@ class AuthAndOrderTest extends TestCase
         $admin = User::where('role', 'admin')->first();
         $response = $this->actingAs($admin)->get(route('dashboard'));
         $response->assertStatus(200);
-        $response->assertSee('Panel Kendali Utama Roastery C3');
+        $response->assertSee('Admin / Owner Dashboard');
+        $response->assertSee('Administrator · Level 1');
     }
 
     public function test_kasir_can_login_and_access_kasir_dashboard(): void
