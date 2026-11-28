@@ -20,11 +20,24 @@ class Order extends Model
         'shipping_phone',
         'shipping_address',
         'customer_notes',
+        'payment_proof',
+        'paid_at',
+        'verified_by',
+        'courier_name',
+        'tracking_number',
+        'shipped_at',
     ];
 
     protected $casts = [
         'total_amount' => 'decimal:2',
+        'paid_at' => 'datetime',
+        'shipped_at' => 'datetime',
     ];
+
+    public function verifier(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verified_by');
+    }
 
     public function user(): BelongsTo
     {

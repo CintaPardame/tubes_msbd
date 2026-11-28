@@ -329,6 +329,46 @@
                     </table>
                 </div>
             </div>
+
+            {{-- Laporan Rekap Tutup Buku Kasir Harian --}}
+            <div class="mt-6 pt-5 border-t border-stone-200">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800">📋 Laporan Serah Terima Kasir (Tutup Buku)</h3>
+                    <span class="text-[10px] text-stone-400">{{ $cashierSummaries->count() }} Laporan Shift Diterima</span>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-stone-100">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-stone-50 text-[10px] uppercase text-stone-500">
+                            <tr>
+                                <th class="px-3 py-2">Tanggal Shift</th>
+                                <th class="px-3 py-2">Petugas Kasir</th>
+                                <th class="px-3 py-2 text-center">Total Order</th>
+                                <th class="px-3 py-2 text-right">Uang Masuk</th>
+                                <th class="px-3 py-2">Catatan Shift</th>
+                                <th class="px-3 py-2 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-100">
+                            @forelse($cashierSummaries as $cSummary)
+                                <tr>
+                                    <td class="px-3 py-2 font-semibold text-stone-800">{{ $cSummary->closing_date->format('d/m/Y') }}</td>
+                                    <td class="px-3 py-2 text-stone-600">{{ $cSummary->cashier->name ?? 'Kasir' }}</td>
+                                    <td class="px-3 py-2 text-center font-bold text-stone-700">{{ $cSummary->total_transactions }}</td>
+                                    <td class="px-3 py-2 text-right font-bold text-forest">Rp {{ number_format((float)$cSummary->total_revenue, 0, ',', '.') }}</td>
+                                    <td class="px-3 py-2 text-stone-500 max-w-xs truncate" title="{{ $cSummary->notes }}">{{ $cSummary->notes ?? '-' }}</td>
+                                    <td class="px-3 py-2 text-center">
+                                        <span class="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold">
+                                            {{ $cSummary->status_label }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="6" class="px-3 py-4 text-center text-stone-400">Belum ada laporan tutup buku dari kasir.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </article>
 
         {{-- FITUR 2 (Part B): Matriks Pengguna & Kontrol Akses --}}

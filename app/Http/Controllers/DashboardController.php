@@ -66,6 +66,7 @@ class DashboardController extends Controller
         $approvedSupplies = Supply::where('status', 'disetujui')->latest()->get();
         $promotions = Promotion::with('product')->latest()->get();
         $recentBatches = RoastingBatch::with(['product', 'supply'])->latest()->take(5)->get();
+        $cashierSummaries = \App\Models\DailyCashierSummary::with('cashier')->latest()->take(10)->get();
 
         return view('dashboard.admin', compact(
             'stats',
@@ -75,7 +76,8 @@ class DashboardController extends Controller
             'supplies',
             'approvedSupplies',
             'promotions',
-            'recentBatches'
+            'recentBatches',
+            'cashierSummaries'
         ));
     }
 
@@ -84,7 +86,7 @@ class DashboardController extends Controller
      */
     private function kasirDashboard(): View
     {
-        $orders = Order::with(['user', 'items.product'])->latest()->get();
+        $orders = Order::with(['user', 'items.product', 'verifier'])->latest()->get();
 
         $stats = [
             'pending' => Order::where('status', 'menunggu_pembayaran')->count(),
@@ -93,7 +95,21 @@ class DashboardController extends Controller
             'completed' => Order::where('status', 'selesai')->count(),
         ];
 
-        return view('dashboard.kasir', compact('orders', 'stats'));
+        // Hitung shift kasir hari ini
+        $today = \Carbon\Carbon::today();
+        $todayProcessed = Order::whereDate('paid_at', $today)
+            ->whereIn('status', ['diproses_kasir', 'dikirim', 'selesai'])
+            ->get();
+
+        $todayStats = [
+            'count' => $todayProcessed->count(),
+            'revenue' => (float) $todayProcessed->sum('total_amount'),
+        ];
+
+        $dailySummaries = \App\Models\DailyCashierSummary::with('cashier')->latest()->take(5)->get();
+        $todaySummary = \App\Models\DailyCashierSummary::whereDate('closing_date', $today)->first();
+
+        return view('dashboard.kasir', compact('orders', 'stats', 'todayStats', 'dailySummaries', 'todaySummary'));
     }
 
     /**

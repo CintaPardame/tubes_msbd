@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SupplyBatchController;
 use App\Http\Controllers\SupplyOfferController;
@@ -53,6 +54,20 @@ Route::middleware('auth')->group(function () {
         Route::delete('/promotions/{promotion}', [AdminController::class, 'deletePromotion'])->name('promotions.destroy');
         Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.destroy');
+    });
+
+    // Kasir Specific Actions (Level 2)
+    Route::prefix('kasir')->name('kasir.')->group(function () {
+        // Fitur 1: Konfirmasi Pembayaran & Cetak Invoice Resmi
+        Route::post('/orders/{order}/confirm-payment', [KasirController::class, 'confirmPayment'])->name('orders.confirm_payment');
+        Route::post('/orders/{order}/upload-proof', [KasirController::class, 'uploadPaymentProof'])->name('orders.upload_proof');
+        Route::get('/orders/{order}/invoice', [KasirController::class, 'printInvoice'])->name('invoice.print');
+
+        // Fitur 2: Input Resi Ekspedisi & Serah Terima Pengiriman
+        Route::patch('/orders/{order}/shipping', [KasirController::class, 'updateShipping'])->name('orders.shipping');
+
+        // Fitur 3: Rekap Tutup Buku Kasir Harian
+        Route::post('/shift/close', [KasirController::class, 'closeShift'])->name('shift.close');
     });
 
     // Order Biji Kopi
